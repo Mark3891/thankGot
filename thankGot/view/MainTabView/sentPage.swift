@@ -4,6 +4,7 @@ struct sentPage: View {
     @EnvironmentObject var userStore: UserStore
     @EnvironmentObject var letterStore: LetterStore
     @State private var isShowingAddPage = false
+    @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
     
     
     var body: some View {
@@ -14,13 +15,47 @@ struct sentPage: View {
             HStack {
                 Spacer()
                 
-                VStack(alignment: .center) {
+                VStack(alignment: .center ,spacing: 20) {
                     TopTitle(title: "Sent")
+                    HStack {
+                        Button(action: {
+                            withAnimation {
+                                selectedMonth = selectedMonth > 1 ? selectedMonth - 1 : 12
+                            }
+                        }) {
+                            Image(systemName: "chevron.left")
+                                .font(.title)
+                                .foregroundColor(.white)
+                        }
+
+                        Spacer()
+
+                        Text("\(selectedMonth)월")
+                            .foregroundColor(.white)
+                            .font(.title)
+                            .fontWeight(.bold)
+
+                        Spacer()
+
+                        Button(action: {
+                            withAnimation {
+                                selectedMonth = selectedMonth < 12 ? selectedMonth + 1 : 1
+                            }
+                        }) {
+                            Image(systemName: "chevron.right")
+                                .font(.title)
+                                .foregroundColor(.white)
+                        }
+                    }
+                    .padding(.horizontal)
                     
                     ScrollView {
                         LazyVStack(spacing: 40) {
                             if let nickname = userStore.currentUser?.nickname {
-                                let sentLetters = letterStore.letters.filter { $0.sentUser == nickname }
+                                let calendar = Calendar.current
+                                let sentLetters = letterStore.letters.filter {
+                                    calendar.component(.month, from: $0.date) == selectedMonth &&
+                                    $0.sentUser == nickname }
 
                                 ForEach(sentLetters, id: \.id) { letter in
                                     SwipeableLetterCard(letter: letter) {

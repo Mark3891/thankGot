@@ -34,6 +34,7 @@ struct MainTabView: View {
                         Text("Sent")
                     }
                     .environmentObject(userStore)
+                
 
                 receivePage()
                     .tabItem {
