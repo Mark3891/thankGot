@@ -23,7 +23,7 @@ struct LoginView: View {
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
 
-                    TextField("", text: $nickname, prompt: Text("NickName").foregroundColor(.white))
+                    TextField("", text: $nickname, prompt: Text("NickName").foregroundColor(Color.gray))
                         .padding(10)
                         .background(Color.background)
                         .cornerRadius(20)
@@ -38,7 +38,10 @@ struct LoginView: View {
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
 
-                    SecureField("", text: $password, prompt: Text("Password").foregroundColor(.white))
+                    SecureField("", text: $password, prompt: Text("Password")
+                        .foregroundColor(.gray)
+                    
+                    )
                         .padding(10)
                         .background(Color.background)
                         .cornerRadius(20)

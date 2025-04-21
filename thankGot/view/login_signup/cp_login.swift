@@ -32,7 +32,7 @@ struct cp_login: View {
                     if (selectedTab == .login){
                         LoginView().environmentObject(userStore)
                     } else if (selectedTab == .signup){
-                        SignUpView().environmentObject(userStore)
+                        SignUpView(selectedTab: $selectedTab).environmentObject(userStore)
                     }
                     
                     
