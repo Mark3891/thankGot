@@ -107,7 +107,7 @@ struct receivePage: View {
                                     ForEach(futureDates, id: \.self) { date in
                                         cloverItem(date: date, count: groupedByDate[date]?.count ?? 0) {
                                             selectedDate = date
-                                            isShowingLetters = true
+                                            isShowingLetters = false
                                         }
                                     }
                                 }
@@ -122,33 +122,39 @@ struct receivePage: View {
                 
             }
         }
-        .sheet(isPresented: $isShowingLetters) {
-            if let date = selectedDate,
-               let letters = groupedLetters(for: date) {
-                VStack(spacing: 20) {
-                    Text("\(formattedDate(date))의 편지들")
-                        .font(.title2)
-                        .padding(.top)
+        .overlay {
+            if let date = selectedDate, isShowingLetters {
+                LetterDetailView(date: date, isPresented: $isShowingLetters)
+                    .environmentObject(userStore)
+                    .environmentObject(letterStore)
+            }
+        }
+        .onAppear {
+            if let nickname = userStore.currentUser?.nickname {
+                letterStore.fetchLetters(for: nickname) { _ in
+                    let calendar = Calendar.current
+                    let today = calendar.startOfDay(for: Date())
 
-                    ScrollView {
-                        ForEach(letters, id: \.id) { letter in
-                            Text(letter.content)
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color.texteditor)
-                                .cornerRadius(10)
-                                .foregroundColor(.white)
-                                .padding(.horizontal)
-                        }
+                    let lettersThisMonth = letterStore.letters.filter {
+                        calendar.component(.month, from: $0.date) == selectedMonth &&
+                        $0.receiverUser == nickname
                     }
 
-                    Button("닫기") {
+                    let groupedByDate = Dictionary(grouping: lettersThisMonth) { letter in
+                        calendar.startOfDay(for: letter.date)
+                    }
+
+                    let pastDates = groupedByDate.keys.filter { $0 < today }.sorted()
+
+                    if let firstPastDate = pastDates.first {
+                        selectedDate = firstPastDate
                         isShowingLetters = false
                     }
-                    .padding()
                 }
             }
         }
+
+
     }
 
     // 클로버 뷰 컴포넌트
@@ -178,12 +184,7 @@ struct receivePage: View {
         }
     }
 
-    // 날짜 → "M월 d일"
-    func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월 d일"
-        return formatter.string(from: date)
-    }
+
 
     // 날짜 → "d일" (clover 아래 표시용)
     func formattedDay(_ date: Date) -> String {
@@ -192,15 +193,6 @@ struct receivePage: View {
         return formatter.string(from: date)
     }
 
-    // 날짜별 편지 필터
-    func groupedLetters(for date: Date) -> [Letter]? {
-        let calendar = Calendar.current
-        let letters = letterStore.letters.filter {
-            calendar.startOfDay(for: $0.date) == date &&
-            $0.receiverUser == userStore.currentUser?.nickname
-        }
-        return letters
-    }
 }
 
 #Preview {

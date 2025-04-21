@@ -26,19 +26,19 @@ struct login_signupView: View {
                         
                         cp_login().background(Color.clear)
                         
-                                            }
-                    .ignoresSafeArea(.keyboard)
+                    }
+                    
                 }
                 
-               
+                
                 
                 
             } //ZStack
             .navigationDestination(isPresented: $isLoggedIn) {
                 MainTabView()
             }
-        
-    } // NavigationView
+            
+        } // NavigationView
         
     }
 }

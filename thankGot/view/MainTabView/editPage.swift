@@ -42,7 +42,16 @@ struct editPage: View {
                     ZStack(alignment: .topLeading){
                         VStack(alignment: .leading){
                            
-                            
+                            HStack{
+                                Text("Dear: \(letter.receiverUser)")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                                Spacer()
+                                Text("\(letter.date.formatted(.dateTime.month(.abbreviated).day().year()))")
+                                    .font(.title2)
+                                    .foregroundColor(.white)
+                            }
+                           
                            
                             
                             ZStack(alignment: .topLeading) {

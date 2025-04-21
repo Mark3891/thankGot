@@ -27,16 +27,16 @@ struct sentPage: View {
                                 .font(.title)
                                 .foregroundColor(.white)
                         }
-
+                        
                         Spacer()
-
+                        
                         Text("\(selectedMonth)월")
                             .foregroundColor(.white)
                             .font(.title)
                             .fontWeight(.bold)
-
+                        
                         Spacer()
-
+                        
                         Button(action: {
                             withAnimation {
                                 selectedMonth = selectedMonth < 12 ? selectedMonth + 1 : 1
@@ -49,37 +49,36 @@ struct sentPage: View {
                     }
                     .padding(.horizontal)
                     
-                    ScrollView {
-                        LazyVStack(spacing: 40) {
-                            if let nickname = userStore.currentUser?.nickname {
-                                let calendar = Calendar.current
-                                let sentLetters = letterStore.letters.filter {
-                                    calendar.component(.month, from: $0.date) == selectedMonth &&
-                                    $0.sentUser == nickname }
-
-                                ForEach(sentLetters, id: \.id) { letter in
-                                    SwipeableLetterCard(letter: letter) {
-                                        print("Edit tapped")
-                                    }
-                                }
-                            } else {
-                                Text("로그인된 유저 정보가 없습니다.")
-                                    .foregroundColor(.gray)
+                    List {
+                        if let nickname = userStore.currentUser?.nickname {
+                            let calendar = Calendar.current
+                            let sentLetters = letterStore.letters.filter {
+                                calendar.component(.month, from: $0.date) == selectedMonth &&
+                                $0.sentUser == nickname }
+                            
+                            ForEach(sentLetters, id: \.id) { letter in
+                                sentLetterCard(letter: letter)
+                                    .listRowBackground(Color.clear)
+                                    
                             }
+                        } else {
+                            Text("로그인된 유저 정보가 없습니다.")
+                                .foregroundColor(.gray)
+                                .listRowBackground(Color.clear)
                         }
-                        .padding(.horizontal)
                     }
-
+                    .listStyle(PlainListStyle())
+                    .background(Color.clear) // List 전체 배경 투명하게
+                    .scrollContentBackground(.hidden)
+                    
+                    
+                    
+                    
                 }
                 .frame(width: UIScreen.main.bounds.width - 40)
                 
                 Spacer()
             } //: HStack
-            
-            
-            
-            
-            
             
             
             

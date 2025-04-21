@@ -2,6 +2,8 @@ import SwiftUI
 
 struct MainTabView: View {
     @EnvironmentObject var userStore: UserStore // @EnvironmentObject로 UserStore 접근
+    @EnvironmentObject var letterStore: LetterStore // letterStore
+
 
     init() {
         // 탭바 배경색 & 선택 색상 설정
@@ -33,7 +35,8 @@ struct MainTabView: View {
                         Image(systemName: "paperplane.fill")
                         Text("Sent")
                     }
-                    .environmentObject(userStore)
+                    
+                    
                 
 
                 receivePage()
@@ -41,10 +44,11 @@ struct MainTabView: View {
                         Image(systemName: "tray.and.arrow.down.fill")
                         Text("Received")
                     }
-                    .environmentObject(userStore)
+                   
+                   
             }
             .accentColor(Color.backgroundColor2) // 선택된 탭 아이템 색상
-            .environmentObject(userStore) // userStore를 environmentObject로 주입
+            
         }
         
     }

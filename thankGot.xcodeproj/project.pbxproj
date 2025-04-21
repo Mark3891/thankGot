@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		EF268CA52DB09E5700B873F9 /* FirebaseFirestoreCombine-Community in Frameworks */ = {isa = PBXBuildFile; productRef = EF268CA42DB09E5700B873F9 /* FirebaseFirestoreCombine-Community */; };
+		EF268CB32DB5CB2800B873F9 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EF268CB22DB5CB2800B873F9 /* FirebaseAnalytics */; };
+		EF268CB52DB5CB2800B873F9 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = EF268CB42DB5CB2800B873F9 /* FirebaseMessaging */; };
 		EF8B47852DACD304002DF39F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = EF8B47842DACD304002DF39F /* FirebaseAnalyticsOnDeviceConversion */; };
 		EF8B47872DACD304002DF39F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = EF8B47862DACD304002DF39F /* FirebaseAuth */; };
 		EF8B47902DACD5F6002DF39F /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = EF8B478F2DACD5F6002DF39F /* FirebaseDatabase */; };
@@ -74,6 +76,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EF268CB52DB5CB2800B873F9 /* FirebaseMessaging in Frameworks */,
+				EF268CB32DB5CB2800B873F9 /* FirebaseAnalytics in Frameworks */,
 				EF8B47902DACD5F6002DF39F /* FirebaseDatabase in Frameworks */,
 				EF8B47922DACD5F6002DF39F /* FirebaseFirestore in Frameworks */,
 				EF8B47852DACD304002DF39F /* FirebaseAnalyticsOnDeviceConversion in Frameworks */,
@@ -146,6 +150,8 @@
 				EF8B47912DACD5F6002DF39F /* FirebaseFirestore */,
 				EF8B47932DACD64F002DF39F /* FirebaseStorage */,
 				EF268CA42DB09E5700B873F9 /* FirebaseFirestoreCombine-Community */,
+				EF268CB22DB5CB2800B873F9 /* FirebaseAnalytics */,
+				EF268CB42DB5CB2800B873F9 /* FirebaseMessaging */,
 			);
 			productName = thankGot;
 			productReference = EF8B46942DAC8BB0002DF39F /* thankGot.app */;
@@ -430,6 +436,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = thankGot/thankGot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"thankGot/Preview Content\"";
@@ -461,6 +468,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = thankGot/thankGot.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"thankGot/Preview Content\"";
@@ -616,6 +624,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = EF8B47832DACD304002DF39F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = "FirebaseFirestoreCombine-Community";
+		};
+		EF268CB22DB5CB2800B873F9 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EF8B47832DACD304002DF39F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		EF268CB42DB5CB2800B873F9 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EF8B47832DACD304002DF39F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		EF8B47842DACD304002DF39F /* FirebaseAnalyticsOnDeviceConversion */ = {
 			isa = XCSwiftPackageProductDependency;

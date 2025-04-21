@@ -11,6 +11,9 @@ struct addPage: View {
     @State private var filteredUsers: [String] = []
     @State private var errorMessage: String = ""
     @State private var isError : Bool = false
+    @State private var isSending = false // 중복 방지용 플래그
+
+    
 
     var body: some View {
         ZStack{
@@ -191,6 +194,10 @@ struct addPage: View {
                   
 
                     Button {
+                        
+                        
+                        guard !isSending else { return }
+                        
                         // 1. nickname이 dummyUsers 목록에 있는지 확인
                         guard dummyUsers.contains(letter_receiverUser) else {
                             errorMessage = "잘못된 닉네임입니다."
@@ -199,7 +206,7 @@ struct addPage: View {
                         }
                         
                 
-                       
+                        isSending = true // 중복 방지를 위해 잠금
                         
                         // 모든 조건을 만족하면 편지 보내기
                         let newLetter = Letter(
@@ -211,6 +218,7 @@ struct addPage: View {
                         )
 
                         letterStore.sendLetter(letter: newLetter) { error in
+                            isSending = false // 전송 끝나면 다시 풀어줌
                             if let error = error {
                                 print("🔥 편지 보내기 실패: \(error.localizedDescription)")
                             } else {
@@ -225,6 +233,7 @@ struct addPage: View {
                             .fontWeight(.regular)
                         Image(systemName: "paperplane")
                     }
+                    .disabled(isSending) // 버튼 비활성화
                     .frame(maxWidth: .infinity, maxHeight: 40)
                     .padding(.vertical, 5)
                     .background(Color.button)
