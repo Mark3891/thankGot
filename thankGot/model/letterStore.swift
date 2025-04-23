@@ -86,7 +86,24 @@ class LetterStore: ObservableObject {
             }
     }
     
-    
+    func deleteLetter(_ letter: Letter) {
+            guard let id = letter.id else { return }
+
+            // 1. 로컬 상태에서 제거
+            if let index = letters.firstIndex(where: { $0.id == id }) {
+                letters.remove(at: index)
+            }
+
+            // 2. Firebase에서 제거
+            let db = Firestore.firestore()
+            db.collection("letters").document(id).delete { error in
+                if let error = error {
+                    print("❌ 편지 삭제 실패: \(error.localizedDescription)")
+                } else {
+                    print("✅ 편지 삭제 성공")
+                }
+            }
+        }
     
     
     

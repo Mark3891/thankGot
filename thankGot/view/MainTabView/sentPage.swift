@@ -5,88 +5,101 @@ struct sentPage: View {
     @EnvironmentObject var userStore: UserStore
     @EnvironmentObject var letterStore: LetterStore
     @State private var isShowingAddPage = false
+    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
     @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
-    
-    
+
     var body: some View {
-        ZStack (alignment: .bottomTrailing){
+        ZStack(alignment: .bottomTrailing) {
             Color.background.ignoresSafeArea()
-            
-            HStack {
-                Spacer()
-                
-                VStack(alignment: .center ,spacing: 20) {
-                    TopTitle(title: "Sent")
-                    HStack {
-                        Button(action: {
-                            withAnimation {
-                                selectedMonth = selectedMonth > 1 ? selectedMonth - 1 : 12
+
+            VStack(spacing: 20) {
+                TopTitle(title: "Sent")
+
+                HStack {
+                    Button(action: {
+                        withAnimation {
+                            if selectedMonth == 1 {
+                                selectedMonth = 12
+                                selectedYear -= 1
+                            } else {
+                                selectedMonth -= 1
                             }
-                        }) {
-                            Image(systemName: "chevron.left")
-                                .font(.title)
-                                .foregroundColor(.white)
                         }
-                        
-                        Spacer()
-                        
-                        Text("\(selectedMonth)월")
+                    }) {
+                        Image(systemName: "chevron.left")
+                            .font(.title2)
                             .foregroundColor(.white)
-                            .font(.title)
-                            .fontWeight(.bold)
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            withAnimation {
-                                selectedMonth = selectedMonth < 12 ? selectedMonth + 1 : 1
-                            }
-                        }) {
-                            Image(systemName: "chevron.right")
-                                .font(.title)
-                                .foregroundColor(.white)
-                        }
                     }
-                    .padding(.horizontal)
-                    
-                    List {
-                        if let nickname = userStore.currentUser?.nickname {
-                            let calendar = Calendar.current
-                            let sentLetters = letterStore.letters.filter {
-                                calendar.component(.month, from: $0.date) == selectedMonth &&
-                                $0.sentUser == nickname
+
+                    Spacer()
+
+                    Text(String(format: "%d년 %d월", selectedYear, selectedMonth))
+                        .foregroundColor(.white)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+
+
+                    Spacer()
+
+                    Button(action: {
+                        withAnimation {
+                            if selectedMonth == 12 {
+                                selectedMonth = 1
+                                selectedYear += 1
+                            } else {
+                                selectedMonth += 1
                             }
-                            
+                        }
+                    }) {
+                        Image(systemName: "chevron.right")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(.horizontal)
+
+                List {
+                    if let nickname = userStore.currentUser?.nickname {
+                        let calendar = Calendar.current
+                        let sentLetters = letterStore.letters.filter {
+                            let letterMonth = calendar.component(.month, from: $0.date)
+                            let letterYear = calendar.component(.year, from: $0.date)
+                            return letterMonth == selectedMonth &&
+                                   letterYear == selectedYear &&
+                                   $0.sentUser == nickname
+                        }
+
+                        if sentLetters.isEmpty {
+                            Text("보낸 편지가 없습니다.")
+                                .foregroundColor(.gray)
+                                .listRowBackground(Color.clear)
+                        } else {
                             ForEach(sentLetters.indices, id: \.self) { index in
-                                VStack(spacing: 20) {
+                                VStack(spacing: 0) {
                                     sentLetterCard(letter: sentLetters[index])
                                         .padding(.vertical, 8)
-                                        
-                                    
+
                                     if index != sentLetters.indices.last {
                                         Divider().background(Color.white.opacity(0.3))
                                     }
                                 }
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
                                 .listRowBackground(Color.clear)
                             }
-                        } else {
-                            ProgressView("유저 정보 로딩 중...")
-                                .progressViewStyle(CircularProgressViewStyle())
-                                .foregroundColor(.gray)
-                                .listRowBackground(Color.clear)
                         }
+                    } else {
+                        ProgressView("유저 정보 로딩 중...")
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .foregroundColor(.gray)
+                            .listRowBackground(Color.clear)
                     }
-                    .listStyle(PlainListStyle())
-                    .background(Color.clear) // List 전체 배경 투명하게
-                    .scrollContentBackground(.hidden)
-                    
                 }
-                .frame(width: UIScreen.main.bounds.width - 40)
-                
-                Spacer()
-            } //: HStack
-            
-            // Floating Button
+                .listStyle(PlainListStyle())
+                .scrollContentBackground(.hidden)
+            }
+            .padding(.horizontal)
+
             Button(action: {
                 isShowingAddPage = true
             }) {
@@ -99,33 +112,11 @@ struct sentPage: View {
                     .shadow(radius: 5)
             }
             .padding()
-            
-            // Logout Button
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        userStore.logout { success in
-                            if success {
-                                print("➡️ 로그인 화면으로 전환할 수 있음")
-                            }
-                        }
-                    }) {
-                        Image(systemName: "rectangle.portrait.and.arrow.right")
-                            .font(.system(size: 24))
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.red)
-                            .clipShape(Circle())
-                            .shadow(radius: 5)
-                    }
-                    .padding()
-                }
-            }
-        } //: ZStack 마지막
+        }
         .sheet(isPresented: $isShowingAddPage) {
-            addPage().environmentObject(letterStore)
+            addPage()
+                .environmentObject(userStore)
+                .environmentObject(letterStore)
         }
         .onAppear {
             userStore.fetchCurrentUserIfLoggedIn {
@@ -138,5 +129,6 @@ struct sentPage: View {
                     }
                 }
             }
-        }    }
+        }
+    }
 }

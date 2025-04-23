@@ -43,6 +43,21 @@ struct sentLetterCard: View {
                 
             }
             .tint(Color.button)
+            Button(role: .destructive) {
+                    letterStore.deleteLetter(letter)
+                } label: {
+                    ZStack {
+                        Color.clear
+                        VStack {
+                            Image(systemName: "trash")
+                                .font(.title2)
+                                .foregroundColor(.white)
+                            Text("Delete")
+                                .font(.caption2)
+                                .foregroundColor(.white)
+                        }
+                    }
+                }
         }
         .sheet(isPresented: $isShowingEditSheet) {
             editPage(letter: letter)

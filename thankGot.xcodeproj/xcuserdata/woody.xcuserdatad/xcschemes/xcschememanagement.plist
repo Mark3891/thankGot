@@ -11,13 +11,28 @@
 		</dict>
 		<key>thankGot.xcscheme_^#shared#^_</key>
 		<dict>
+			<key>isShown</key>
+			<true/>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>thankGotWidgetExtension.xcscheme_^#shared#^_</key>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>EF8B46932DAC8BB0002DF39F</key>
 		<dict>
-			<key>orderHint</key>
-			<integer>2</integer>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EF8B46A32DAC8BB2002DF39F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>EF8B46AD2DAC8BB2002DF39F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>

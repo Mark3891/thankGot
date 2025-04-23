@@ -3,7 +3,7 @@ import SwiftUI
 struct receivePage: View {
     @EnvironmentObject var userStore: UserStore
     @EnvironmentObject var letterStore: LetterStore
-    
+    @State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
     @State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
     @State private var selectedDate: Date? = nil
     @State private var isShowingLetters = false
@@ -21,30 +21,41 @@ struct receivePage: View {
                 HStack {
                     Button(action: {
                         withAnimation {
-                            selectedMonth = selectedMonth > 1 ? selectedMonth - 1 : 12
+                            if selectedMonth == 1 {
+                                selectedMonth = 12
+                                selectedYear -= 1
+                            } else {
+                                selectedMonth -= 1
+                            }
                         }
                     }) {
                         Image(systemName: "chevron.left")
-                            .font(.title)
+                            .font(.title2)
                             .foregroundColor(.white)
                     }
-                    
+
                     Spacer()
-                    
-                    Text("\(selectedMonth)월")
+
+                    Text(String(format: "%d년 %d월", selectedYear, selectedMonth))
                         .foregroundColor(.white)
-                        .font(.title)
-                        .fontWeight(.bold)
-                    
+                        .font(.title2)
+                        .fontWeight(.semibold)
+
+
                     Spacer()
-                    
+
                     Button(action: {
                         withAnimation {
-                            selectedMonth = selectedMonth < 12 ? selectedMonth + 1 : 1
+                            if selectedMonth == 12 {
+                                selectedMonth = 1
+                                selectedYear += 1
+                            } else {
+                                selectedMonth += 1
+                            }
                         }
                     }) {
                         Image(systemName: "chevron.right")
-                            .font(.title)
+                            .font(.title2)
                             .foregroundColor(.white)
                     }
                 }
@@ -53,11 +64,12 @@ struct receivePage: View {
                 let calendar = Calendar.current
                 let today = calendar.startOfDay(for: Date())
                 
-                // 월 필터링 + 닉네임 필터링
+                // 월 필터링+ 년도 필터링 + 닉네임 필터링
                 let lettersThisMonth = letterStore.letters.filter {
-                    calendar.component(.month, from: $0.date) == selectedMonth &&
-                    $0.receiverUser == userStore.currentUser?.nickname
-                }
+                                  calendar.component(.month, from: $0.date) == selectedMonth &&
+                                  calendar.component(.year, from: $0.date) == selectedYear && // 연도 추가 필터링
+                                  $0.receiverUser == userStore.currentUser?.nickname
+                              }
                 
                 // 날짜별로 그룹화
                 let groupedByDate = Dictionary(grouping: lettersThisMonth) { letter in
@@ -65,8 +77,8 @@ struct receivePage: View {
                 }
                 
                 // 날짜 정렬
-                let pastDates = groupedByDate.keys.filter { $0 < today }.sorted()
-                let futureDates = groupedByDate.keys.filter { $0 >= today }.sorted()
+                let pastDates = groupedByDate.keys.filter { $0 <= today }.sorted()
+                let futureDates = groupedByDate.keys.filter { $0 > today }.sorted()
                 
                 
                 VStack(alignment: .leading, spacing: 20) {

@@ -103,6 +103,7 @@ struct LoginView: View {
                             
                             // Firestore에서 가져온 사용자 정보를 User 모델로 저장
                             let data = doc.data()
+                            print(data)
                             if let user = User(from: data, id: uid) {
                                 userStore.updateUser(with: user) // UserStore에 사용자 정보 업데이트
                                 print(userStore.currentUser?.email ?? "email not found")

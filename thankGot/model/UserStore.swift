@@ -4,6 +4,7 @@ import Foundation
 
 class UserStore: ObservableObject {
     @Published var currentUser: User? = nil
+    @Published var allNicknames: [String] = []
     
     func updateUser(with user: User) {
         self.currentUser = user
@@ -59,6 +60,7 @@ class UserStore: ObservableObject {
             }
         }
     }
+    
     func logout(completion: @escaping (Bool) -> Void = { _ in }) {
            do {
                try Auth.auth().signOut()
@@ -71,6 +73,24 @@ class UserStore: ObservableObject {
                completion(false)
            }
        }
+    func fetchAllNicknames(completion: @escaping (Bool) -> Void = { _ in }) {
+            let db = Firestore.firestore()
+            db.collection("users").getDocuments { snapshot, error in
+                if let error = error {
+                    print("❌ 닉네임 불러오기 실패: \(error.localizedDescription)")
+                    completion(false)
+                    return
+                }
+
+                guard let documents = snapshot?.documents else {
+                    completion(false)
+                    return
+                }
+
+                self.allNicknames = documents.compactMap { $0["nickname"] as? String }
+                completion(true)
+            }
+        }
     
   
 }
