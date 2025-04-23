@@ -1,4 +1,5 @@
 import SwiftUI
+import FirebaseAuth
 
 struct sentPage: View {
     @EnvironmentObject var userStore: UserStore
@@ -8,7 +9,6 @@ struct sentPage: View {
     
     
     var body: some View {
-        
         ZStack (alignment: .bottomTrailing){
             Color.background.ignoresSafeArea()
             
@@ -54,15 +54,24 @@ struct sentPage: View {
                             let calendar = Calendar.current
                             let sentLetters = letterStore.letters.filter {
                                 calendar.component(.month, from: $0.date) == selectedMonth &&
-                                $0.sentUser == nickname }
+                                $0.sentUser == nickname
+                            }
                             
-                            ForEach(sentLetters, id: \.id) { letter in
-                                sentLetterCard(letter: letter)
-                                    .listRowBackground(Color.clear)
+                            ForEach(sentLetters.indices, id: \.self) { index in
+                                VStack(spacing: 20) {
+                                    sentLetterCard(letter: sentLetters[index])
+                                        .padding(.vertical, 8)
+                                        
                                     
+                                    if index != sentLetters.indices.last {
+                                        Divider().background(Color.white.opacity(0.3))
+                                    }
+                                }
+                                .listRowBackground(Color.clear)
                             }
                         } else {
-                            Text("로그인된 유저 정보가 없습니다.")
+                            ProgressView("유저 정보 로딩 중...")
+                                .progressViewStyle(CircularProgressViewStyle())
                                 .foregroundColor(.gray)
                                 .listRowBackground(Color.clear)
                         }
@@ -71,16 +80,11 @@ struct sentPage: View {
                     .background(Color.clear) // List 전체 배경 투명하게
                     .scrollContentBackground(.hidden)
                     
-                    
-                    
-                    
                 }
                 .frame(width: UIScreen.main.bounds.width - 40)
                 
                 Spacer()
             } //: HStack
-            
-            
             
             // Floating Button
             Button(action: {
@@ -95,25 +99,44 @@ struct sentPage: View {
                     .shadow(radius: 5)
             }
             .padding()
+            
+            // Logout Button
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        userStore.logout { success in
+                            if success {
+                                print("➡️ 로그인 화면으로 전환할 수 있음")
+                            }
+                        }
+                    }) {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .font(.system(size: 24))
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.red)
+                            .clipShape(Circle())
+                            .shadow(radius: 5)
+                    }
+                    .padding()
+                }
+            }
         } //: ZStack 마지막
         .sheet(isPresented: $isShowingAddPage) {
             addPage().environmentObject(letterStore)
         }
         .onAppear {
-            if let nickname = userStore.currentUser?.nickname {
-                letterStore.fetchLetters(for: nickname) { error in
-                    if let error = error {
-                        print("🔥 편지 불러오기 실패: \(error.localizedDescription)")
-                    } else {
-                        print("✅ 보낸 편지 불러오기 성공")
+            userStore.fetchCurrentUserIfLoggedIn {
+                if let nickname = userStore.currentUser?.nickname {
+                    print("유저 편지 가져오는 중: \(nickname)")
+                    letterStore.fetchLetters(for: nickname) { error in
+                        if let error = error {
+                            print("🔥 편지 불러오기 실패: \(error.localizedDescription)")
+                        }
                     }
                 }
             }
-            
-            
-            
-        }
-    }
-    
-    
+        }    }
 }

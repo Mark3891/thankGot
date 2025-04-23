@@ -20,11 +20,10 @@ struct sentLetterCard: View {
             Text(letter.date.formatted(.dateTime.month().day().year()))
                 .font(.caption)
                 .foregroundColor(.gray)
+            
+           
         }
-        .padding()
         .frame(width: UIScreen.main.bounds.width - 40,height: 120)
-        .background(Color.texteditor)
-        .cornerRadius(12)
         .swipeActions {
             Button(action: {
                 isShowingEditSheet = true

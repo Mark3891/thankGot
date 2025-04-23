@@ -11,7 +11,7 @@ struct LoginView: View {
     @FocusState private var isPasswordFocused: Bool
     @AppStorage("userId") var userID = ""
     @EnvironmentObject var userStore: UserStore // @EnvironmentObject로 UserStore 접근
-
+    
     var body: some View {
         
         VStack(spacing: 20) {
@@ -22,7 +22,7 @@ struct LoginView: View {
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
-
+                    
                     TextField("", text: $nickname, prompt: Text("NickName").foregroundColor(Color.gray))
                         .padding(10)
                         .background(Color.background)
@@ -30,27 +30,27 @@ struct LoginView: View {
                         .foregroundColor(.white)
                         .focused($isNicknameFocused)
                 }
-
+                
                 // Password SecureField
                 VStack(alignment: .leading, spacing: 10) {
                     Text("PassWord")
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
-
+                    
                     SecureField("", text: $password, prompt: Text("Password")
                         .foregroundColor(.gray)
-                    
+                                
                     )
-                        .padding(10)
-                        .background(Color.background)
-                        .cornerRadius(20)
-                        .foregroundColor(.white)
-                        .focused($isPasswordFocused)
+                    .padding(10)
+                    .background(Color.background)
+                    .cornerRadius(20)
+                    .foregroundColor(.white)
+                    .focused($isPasswordFocused)
                 }
             }
             .padding(.vertical, 30)
-
+            
             // Log In Button
             Button {
                 loginWithNickname()
@@ -64,7 +64,7 @@ struct LoginView: View {
             .background(Color.button)
             .cornerRadius(20)
             .foregroundColor(Color.white)
-
+            
             // Error message
             if !errorMessage.isEmpty {
                 Text(errorMessage).foregroundColor(.red)
@@ -72,8 +72,10 @@ struct LoginView: View {
         }
         .padding()
     }
-
+    
     // 로그인 메서드
+    
+    
     func loginWithNickname() {
         let db = Firestore.firestore()
         db.collection("users")
@@ -83,13 +85,13 @@ struct LoginView: View {
                     errorMessage = "Firestore error: \(error.localizedDescription)"
                     return
                 }
-
+                
                 guard let doc = snapshot?.documents.first,
                       let email = doc.data()["email"] as? String else {
                     errorMessage = "Nickname not found"
                     return
                 }
-
+                
                 Auth.auth().signIn(withEmail: email, password: password) { result, error in
                     if let error = error {
                         errorMessage = error.localizedDescription
@@ -101,21 +103,20 @@ struct LoginView: View {
                             
                             // Firestore에서 가져온 사용자 정보를 User 모델로 저장
                             let data = doc.data()
-                            if let nickname = data["nickname"] as? String,
-                               let email = data["email"] as? String,
-                               let id = data["id"] as? String {
-                                let user = User(nickname: nickname, email: email, id: id)
+                            if let user = User(from: data, id: uid) {
                                 userStore.updateUser(with: user) // UserStore에 사용자 정보 업데이트
                                 print(userStore.currentUser?.email ?? "email not found")
                                 print(userStore.currentUser?.id ?? "id not found")
                                 print(userStore.currentUser?.nickname ?? "nickname not found")
-                                
+                            } else {
+                                errorMessage = "Failed to parse user data"
                             }
                         }
                     }
                 }
             }
     }
+    
 }
 
 #Preview {

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct login_signupView: View {
     @AppStorage("isLoggedIn") var isLoggedIn = false
+ 
     var body: some View {
         
         NavigationStack{
@@ -35,14 +36,10 @@ struct login_signupView: View {
                 
             } //ZStack
             .navigationDestination(isPresented: $isLoggedIn) {
-                MainTabView()
-            }
+                MainTabView()            }
             
         } // NavigationView
         
     }
 }
 
-#Preview {
-    login_signupView()
-}

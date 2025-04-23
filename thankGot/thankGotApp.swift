@@ -8,12 +8,13 @@ struct thankGotApp: App {
     @StateObject var userStore = UserStore()
     @StateObject var letterStore = LetterStore()
     
-    init() {
-        isLoggedIn = false
-    }
+   
     
     var body: some Scene {
         WindowGroup {
+            Group{
+                
+            }
             if isLoggedIn {
                 MainTabView()
                     .environmentObject(userStore)
