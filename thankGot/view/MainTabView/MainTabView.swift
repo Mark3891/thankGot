@@ -1,52 +1,94 @@
 import SwiftUI
 
 struct MainTabView: View {
-    @EnvironmentObject var userStore: UserStore // @EnvironmentObject로 UserStore 접근
-    @EnvironmentObject var letterStore: LetterStore // letterStore
+    @EnvironmentObject var userStore: UserStore
+    @EnvironmentObject var letterStore: LetterStore
     
-    init() {
-        let appearance = UITabBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        if let backgroundImage = UIImage(named: "wood") {
-            appearance.backgroundImage = backgroundImage
-        }
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor.button,
-            .font: UIFont.systemFont(ofSize: 14, weight: .bold)
-        ]
-        appearance.stackedLayoutAppearance.selected.iconColor = UIColor.button
-        appearance.stackedLayoutAppearance.normal.iconColor = UIColor.nonselect
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.nonselect]
-        
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
+    enum Tab {
+        case sent, received, myPage
     }
+    
+    @State private var selectedTab: Tab = .sent
     
     var body: some View {
         NavigationStack {
-            TabView {
-                sentPage()
-                    .tabItem {
-                        Image(systemName: "paperplane.fill")
-                        Text("Sent")
+            VStack(spacing: 0) {
+                // 현재 선택된 페이지
+                Group {
+                    switch selectedTab {
+                    case .sent:
+                        sentPage()
+                    case .received:
+                        receivePage()
+                    case .myPage:
+                        myPage()
                     }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 
-                receivePage()
-                    .tabItem {
-                        Image(systemName: "tray.and.arrow.down.fill")
-                        Text("Received")
+                // 커스텀 탭바
+                HStack {
+                    
+                    TabBarButton(
+                        isSelected: selectedTab == .sent,
+                        systemImage: selectedTab == .sent ? "paperplane.fill" : "paperplane",
+                        text: "Sent"
+                    ) {
+                        selectedTab = .sent
                     }
-                
-                myPage()
-                    .tabItem {
-                        Image(systemName: "person.fill")
-                        Text("My page")
+                    
+                    TabBarButton(
+                        isSelected: selectedTab == .received,
+                        systemImage: selectedTab == .received ? "envelope.fill" : "envelope",
+                        text: "Received"
+                    ) {
+                        selectedTab = .received
                     }
-      
+                    
+                    TabBarButton(
+                        isSelected: selectedTab == .myPage,
+                        systemImage: selectedTab == .myPage ? "person.fill" : "person",
+                        text: "My page"
+                    ) {
+                        selectedTab = .myPage
+                    }
+                    
+                }
+                .frame(height: 50)
+                .padding(.bottom, 30)
+                .background(
+                    Image("wood")
+                        .resizable()
+                        .scaledToFill()
+                        .ignoresSafeArea(edges: .bottom)
+                )
+               
             }
-            .accentColor(Color.backgroundColor2) // 선택된 탭 아이템 색상
-            
+            .edgesIgnoringSafeArea(.bottom)
         }
+    }
+}
+
+struct TabBarButton: View {
+    let isSelected: Bool
+    let systemImage: String
+    let text: String
+    let action: () -> Void
+    
+    var body: some View {
+        Button(action: action) {
+            VStack {
+                Image(systemName: systemImage)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: isSelected ? 36 : 28, height: isSelected ? 36 : 28)
+                    .foregroundColor(isSelected ? Color.nonselect : Color.nonselect)
+                
+                
+            }
+        }
+        .frame(maxWidth: .infinity)
         
     }
 }
+

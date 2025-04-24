@@ -1,14 +1,43 @@
 import SwiftUI
 
+
+
+
 extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                         to: nil, from: nil, for: nil)
     }
-}
+    
+    func TopTitle(_ title: String) -> some View {
+            ZStack {
+                Image("wood")
+                    .resizable()
+                    .frame(width: UIScreen.main.bounds.width - 40, height: 80)
+                    .cornerRadius(15)
 
+                // Stroke 텍스트
+                Text(title)
+                    .font(Font.custom("WoodyWood", size: 60))
+                    .foregroundColor(.clear)
+                    .overlay(
+                        Text(title)
+                            .font(Font.custom("WoodyWood", size: 60))
+                            .foregroundColor(.black)
+                            .offset(x: 1, y: 1)
+                            .opacity(0.4)
+                    )
 
-extension View {
+                // 본문 텍스트
+                Text(title)
+                    .font(Font.custom("WoodyWood", size: 60))
+                    .foregroundColor(.black)
+            }
+            .padding(.top, 20)
+        }
+        
+    
+    
     func customAlert(isPresented: Binding<Bool>,
                      title: String,
                      message: String,
@@ -31,7 +60,7 @@ extension View {
                     
                     Text(message)
                         .font(.subheadline)
-                        .foregroundColor(.gray)
+                        .foregroundColor(.white)
                         .multilineTextAlignment(.center)
                     
                     Button(action: {
@@ -61,7 +90,7 @@ extension View {
     
     func cloverItem(date: Date, count: Int, action: @escaping () -> Void) -> some View {
         ZStack {
-            VStack(spacing: 4) {
+            VStack(spacing: 10) {
                 Image("clover")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
@@ -70,17 +99,17 @@ extension View {
                 
                 Text(formattedDay(date))
                     .font(.caption)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color.text)
             }
             
             if count > 0 {
                 Text("\(count)")
                     .font(.subheadline)
-                    .foregroundColor(.white)
-                    .padding(5)
-                    .background(Color.letter)
-                    .clipShape(Circle())
-                    .offset(x: 50, y:-45)
+                    .foregroundColor(Color.black)
+                    .frame(width: 24, height: 24)
+                    .background(Circle().fill(Color.clovernumberback))
+                    .offset(x: 36, y: 28)
+
             }
         }
     }

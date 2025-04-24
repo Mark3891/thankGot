@@ -18,12 +18,12 @@ struct LoginView: View {
             VStack(spacing: 30) {
                 // Nickname TextField
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("NickName")
+                    Text("Nickname")
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
                     
-                    TextField("", text: $nickname, prompt: Text("NickName").foregroundColor(Color.gray))
+                    TextField("", text: $nickname, prompt: Text("Nickname").foregroundColor(Color.gray))
                         .padding(10)
                         .background(Color.background)
                         .cornerRadius(20)
@@ -33,7 +33,7 @@ struct LoginView: View {
                 
                 // Password SecureField
                 VStack(alignment: .leading, spacing: 10) {
-                    Text("PassWord")
+                    Text("Password")
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)

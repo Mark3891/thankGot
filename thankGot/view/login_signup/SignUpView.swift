@@ -42,12 +42,12 @@ struct SignUpView: View {
                 } //VStack
                 
                 VStack(alignment: .leading, spacing:10){
-                    Text("NickName")
+                    Text("Nickname")
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)
                     
-                    TextField("", text: $nickname, prompt: Text("NickName").foregroundColor(.gray))
+                    TextField("", text: $nickname, prompt: Text("Nickname").foregroundColor(.gray))
                         .padding(10)
                         .background(Color.background)
                         .cornerRadius(20)
@@ -58,7 +58,7 @@ struct SignUpView: View {
                 
                 
                 VStack(alignment: .leading, spacing:10){
-                    Text("PassWord")
+                    Text("Password")
                         .font(.system(size: 24))
                         .fontWeight(.bold)
                         .foregroundColor(Color.white)

@@ -13,7 +13,8 @@ struct sentPage: View {
             Color.background.ignoresSafeArea()
 
             VStack(spacing: 20) {
-                TopTitle(title: "Sent")
+                TopTitle("Sent")
+                    
 
                 HStack {
                     Button(action: {
@@ -28,13 +29,13 @@ struct sentPage: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.title2)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color.text)
                     }
 
                     Spacer()
 
                     Text(String(format: "%d년 %d월", selectedYear, selectedMonth))
-                        .foregroundColor(.white)
+                        .foregroundColor(Color.text)
                         .font(.title2)
                         .fontWeight(.semibold)
 
@@ -53,7 +54,7 @@ struct sentPage: View {
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.title2)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color.text)
                     }
                 }
                 .padding(.horizontal)
@@ -80,7 +81,7 @@ struct sentPage: View {
                                         .padding(.vertical, 8)
 
                                     if index != sentLetters.indices.last {
-                                        Divider().background(Color.white.opacity(0.3))
+                                        Divider().background(Color.text.opacity(0.5))
                                     }
                                 }
                                 .listRowInsets(EdgeInsets())

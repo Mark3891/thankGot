@@ -14,8 +14,7 @@ struct receivePage: View {
             Color.background.ignoresSafeArea()
             
             VStack(spacing: 20) {
-                TopTitle(title: "Receive")
-                    .padding(.top, 20)
+                TopTitle("Receive")
                 
                 // 월 선택 뷰
                 HStack {
@@ -31,13 +30,13 @@ struct receivePage: View {
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.title2)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color.text)
                     }
 
                     Spacer()
 
                     Text(String(format: "%d년 %d월", selectedYear, selectedMonth))
-                        .foregroundColor(.white)
+                        .foregroundColor(Color.text)
                         .font(.title2)
                         .fontWeight(.semibold)
 
@@ -56,7 +55,7 @@ struct receivePage: View {
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.title2)
-                            .foregroundColor(.white)
+                            .foregroundColor(Color.text)
                     }
                 }
                 .padding(.horizontal)
@@ -83,11 +82,25 @@ struct receivePage: View {
                 
                 VStack(alignment: .leading, spacing: 20) {
                     
-                    // MARK: 📬 오늘 이전
+                    if pastDates.isEmpty && futureDates.isEmpty {
+                        HStack{
+                            Text("받은 편지가 없습니다.")
+                                .foregroundColor(.gray)
+                                .padding(.top)
+                                .padding(.horizontal)
+                            Spacer()
+                            
+                        }
+                        
+                            
+                    }
+                    
+                    // MARK: 오늘 이전
                     if !pastDates.isEmpty {
-                        Text("📬 열려 있는 편지함")
-                            .foregroundColor(.gray)
-                            .font(.headline)
+                        Text("열려 있는 편지함")
+                            .foregroundColor(Color.text)
+                            .font(.title2)
+                            .fontWeight(.semibold)
                             .padding(.horizontal)
                         ScrollView{
                             
@@ -107,15 +120,20 @@ struct receivePage: View {
                             
                         } //Scrollview 오늘이전
                     }
+                    if !pastDates.isEmpty{
+                        Divider().background(Color.text.opacity(0.5))
+                    }
+                    
                     if !futureDates.isEmpty {
-                        Text("📅 개봉 예정 편지함")
-                            .foregroundColor(.gray)
-                            .font(.headline)
+                        Text("개봉 예정 편지함")
+                            .foregroundColor(Color.text)
+                            .font(.title2)
+                            .fontWeight(.semibold)
                             .padding(.horizontal)
                             .padding(.top)
                         
                         ScrollView{
-                            // MARK: 📅 오늘 이후
+                            // MARK: 오늘 이후
                             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 20), count: 3), spacing: 20) {
                                 ForEach(futureDates, id: \.self) { date in
                                     cloverItem(date: date, count: groupedByDate[date]?.count ?? 0) {
@@ -133,10 +151,12 @@ struct receivePage: View {
                         }
                     }
                     
+                    
                 }
                 
-            }
-        }
+            }//vstack
+            .padding(.horizontal)
+        }//ZStack
         .overlay {
             if let date = selectedDate, isShowingLetters {
                 LetterDetailView(date: date, isPresented: $isShowingLetters)

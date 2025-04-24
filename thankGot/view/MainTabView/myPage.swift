@@ -12,6 +12,8 @@ struct myPage: View {
                 .ignoresSafeArea()
             
             VStack {
+                
+                TopTitle("My Page")
                 // Profile section
                 VStack(spacing: 16) {
                     // Profile picture or avatar (optional)

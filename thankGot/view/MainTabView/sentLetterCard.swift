@@ -10,16 +10,16 @@ struct sentLetterCard: View {
             Text("To: \(letter.receiverUser)")
                 .font(.title)
                 .fontWeight(.semibold)
-                .foregroundColor(.white)
+                .foregroundColor(Color.text)
             
             Text(letter.content)
-                .foregroundColor(.white)
+                .foregroundColor(Color.text)
                 .lineLimit(3)
                 .frame(width: UIScreen.main.bounds.width - 60, alignment: .leading)
             
             Text(letter.date.formatted(.dateTime.month().day().year()))
                 .font(.caption)
-                .foregroundColor(.gray)
+                .foregroundColor(Color.text.opacity(0.5))
             
            
         }

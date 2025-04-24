@@ -21,7 +21,8 @@ struct login_signupView: View {
                 ScrollView{
                     VStack{
                         
-                        TopTitle(title: "ThankGot")
+                        
+                        TopTitle("ThankGot")
                             .padding(.top, UIScreen.main.bounds.height * 0.1)
                             .padding(.bottom,20)
                         
